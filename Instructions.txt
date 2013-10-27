@@ -1,0 +1,7 @@
+Required python version: 2.7.5
+
+To run main server: python mainSever.py
+
+To run web server: cd SmartyWebServer && python manage.py runserver
+
+To test web-page: http://127.0.0.1:8000/getTemperature/getTemperature/

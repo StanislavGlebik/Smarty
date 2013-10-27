@@ -17,14 +17,13 @@ def loop(serversocket, deviceManager):
 		command = clientsocket.recv(4096)
 		logger.info("Received command: " + command)
 		try:
-			clientsocket.send(deviceManager.sendCommand(json.loads(command)))
+			clientsocket.sendall(deviceManager.sendCommand(json.loads(command)))
 		except driverCommonModule.DriverException as e:
-			clientsocket.send(e.message)
+			clientsocket.sendall(e.message)
 		except Exception as e:
 			logger.error(e.message)
 
 def main():
-	#sys.path.append(common.DRIVERS_FOLDER)
 	logging.config.fileConfig(os.path.join(common.CONFIGS_FOLDER, common.LOGGING_CONF))
 	logger.info("===============Start initialization===============")
 

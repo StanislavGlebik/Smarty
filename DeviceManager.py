@@ -30,9 +30,8 @@ class DeviceManager:
 			return self.__getJSONError("Bad id!")
 
 	def __getJSONError(self, message):
-		#TODO: format string
 		#TODO: error codes
-		return "['Bad request': '" + message + "']"
+		return "['Bad request': '{error}']".format(error=message)
 
 	def __initDevices(self, configFile):
 		if not os.path.exists(configFile):
