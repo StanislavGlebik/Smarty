@@ -32,6 +32,10 @@ def get_map():
 def get_state_for_client(request, deviceId):
     return HttpResponse(send_get_state(deviceId))
 
+def get_map_for_client(request):
+    print "ololo"
+    return HttpResponse(get_map())
+
 def index(request):
     devices = ast.literal_eval(get_device_list())
     context = {'deviceList': devices}
