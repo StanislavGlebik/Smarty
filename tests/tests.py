@@ -26,18 +26,18 @@ class DriverManagerUnitTest_A(unittest.TestCase):
 	def testA(self):
 		deviceList = self.deviceManager.getDeviceList()
 		deviceList.sort()
-		assert [(0, "Temperature sensor")] == deviceList
+		assert [{0: "Temperature sensor"}] == deviceList
 
 	#sendCommand() checking
 	def testB(self):
 		deviceList = self.deviceManager.getDeviceList()
-		deviceId = deviceList[0][0]
-		result  = self.deviceManager.sendCommand(json.loads('{"get_temperature":"", "deviceId": 0}'))
-		assert "{'temperature': 15}" == result
+		deviceId = deviceList[0].keys()[0]
+		result  = self.deviceManager.sendCommand(json.loads('{"action":"get_temperature", "deviceId": 0}'))
+		assert '{"temperature": 15}' == result
 
 	#Bad Id sendCommand() checking
 	def testC(self):
-		result  = self.deviceManager.sendCommand(json.loads('{"get_temperature":"", "deviceId": 1}'))
+		result  = self.deviceManager.sendCommand(json.loads('{"action":"get_temperature", "deviceId": 1}'))
 		assert "['Bad request': 'Bad id!']" == result
 
 

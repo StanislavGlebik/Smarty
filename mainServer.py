@@ -11,6 +11,9 @@ from DeviceManager import DeviceManager
 logger = logging.getLogger("mainServerLogger")
 
 def loop(serversocket, deviceManager):
+	sys.path.append(common.DRIVERS_FOLDER)	
+	driverCommonModule = __import__(common.DRIVER_COMMON_MODULE_NAME)
+
 	while True:
 		(clientsocket, address) = serversocket.accept()
 		logger.info("New connection: " + str(address))

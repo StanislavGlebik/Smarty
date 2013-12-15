@@ -8,7 +8,10 @@ class MockTemperatureSensorDriver:
 			self.name = "No name"
 
 	def doIt(self, params):
-		if params.has_key("get_temperature"):
-			return '{"temperature": 15}'
-		else:
+		try:
+			if params["action"] == "get_temperature":
+				return '{"temperature": 15}'
+			else:
+				raise Exception()
+		except :
 			raise DriverCommon.DriverException("Bad command")

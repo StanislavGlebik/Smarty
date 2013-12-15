@@ -15,10 +15,39 @@ class DeviceManager:
 		self.__initDevices(configFile)
 
 	def getDeviceList(self):
-		return [(id, device.name) for (id, device) in self.__allLoadedDevices.items()]
+		return {id: device.name for (id, device) in self.__allLoadedDevices.items()}
 
+	def getMap(self):
+		with open(common.getMapFilePath(), "r") as fin:
+			width, height = fin.readline().split()
+			rectangles = []
+			for line in fin.readlines():
+				splitted = line.split()
+				if splitted[0] == "Rect":
+					new_rect = (int(splitted[1]), int(splitted[2]), int(splitted[3]), int(splitted[4]))
+					rectangles.append(new_rect)
+
+		return {'width': width, 
+				'height': height,
+				'rectangles': rectangles}
+
+	#TODO: remove hardcoded commands
 	def sendCommand(self, command):
 		driverCommonModule = __import__(common.DRIVER_COMMON_MODULE_NAME)
+		if not command.has_key("action"):
+			self.logger.error("No 'action' field in JSON " + json.dumps(command))
+			return self.__getJSONError("No 'action' field in JSON " + json.dumps(command))
+
+		if command["action"] == "get_device_list":
+			return str(self.getDeviceList())
+
+		try:
+			if command["action"] == "get_map":
+				return str(self.getMap())
+		except Exception as e:
+			self.logger.error("Cannot get map: " + e.message)
+			return self.__getJSONError("Error while handling request: " + e.message)
+
 		try:
 			device = self.__allLoadedDevices[command["deviceId"]]
 			return device.doIt(command)		

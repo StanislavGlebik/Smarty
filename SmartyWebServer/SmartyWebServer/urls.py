@@ -5,7 +5,7 @@ from django.conf.urls import patterns, include, url
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-	url(r'getTemperature/', include('WebServerApp.urls')),
+	url(r'', include('WebServerApp.urls')),
     # Examples:
     # url(r'^$', 'SmartyWebServer.views.home', name='home'),
     # url(r'^SmartyWebServer/', include('SmartyWebServer.foo.urls')),
