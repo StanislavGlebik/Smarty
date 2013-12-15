@@ -9,8 +9,8 @@ class MockTemperatureSensorDriver:
 
 	def doIt(self, params):
 		try:
-			if params["action"] == "get_temperature":
-				return '{"temperature": 15}'
+			if params["action"] == "get_state":
+				return '{"result":1, "temperature": 15}'
 			else:
 				raise Exception()
 		except :

@@ -60,7 +60,7 @@ class DeviceManager:
 
 	def __getJSONError(self, message):
 		#TODO: error codes
-		return "['Bad request': '{error}']".format(error=message)
+		return "{'result': 0, 'error_msg': '{%s}'}"%message
 
 	def __initDevices(self, configFile):
 		if not os.path.exists(configFile):
