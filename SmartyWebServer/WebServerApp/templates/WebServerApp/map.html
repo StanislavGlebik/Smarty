@@ -1,0 +1,18 @@
+{% extends "WebServerApp/base.html" %}
+
+{% block content %}
+  <div class="starter-template">
+    <h1>Map</h1>
+  </div>
+
+  <canvas id='example'>Обновите браузер</canvas>
+
+{% for rectangle in rectangles %}
+	<script>
+	    var example = document.getElementById("example"),
+	    ctx = example.getContext('2d');
+	    ctx.strokeRect({{rectangle.x}}, {{rectangle.y}}, {{rectangle.width}}, {{rectangle.height}});
+    </script>
+{% endfor %}
+
+{% endblock content %}

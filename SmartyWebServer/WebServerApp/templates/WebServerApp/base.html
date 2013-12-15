@@ -1,0 +1,38 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<head>
+	<meta charset="utf-8">
+	<title>Smarty</title>
+	<link rel="stylesheet" type="text/css" href="{% static 'WebServerApp/css/bootstrap.min.css' %}"/>	
+    <link rel="stylesheet" href="{% static 'WebServerApp/css/starter-template.css' %}">	
+</head>
+
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">Smarty</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="/map">Map</a></li> 
+            <li><a href="#about">About</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+      <div class="well sidebar-nav">
+        <ul class="nav">
+          <li>Devices</li>
+          {% for id, deviceName in deviceList.items %}
+            <li><a href={%url 'getTemperature' id%}>{{ deviceName }}</a></li>
+          {% endfor %}
+        </ul>
+      </div><!--/.well -->
+    </div><!--/span-->
+
+    {% block content %} {% endblock %}
+</body>
