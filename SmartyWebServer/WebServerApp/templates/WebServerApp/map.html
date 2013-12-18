@@ -7,12 +7,47 @@
 
   <canvas id='example'>Обновите браузер</canvas>
 
-{% for rectangle in rectangles %}
 	<script>
-	    var example = document.getElementById("example"),
+	    example = document.getElementById("example"),
 	    ctx = example.getContext('2d');
-	    ctx.strokeRect({{rectangle.x}}, {{rectangle.y}}, {{rectangle.width}}, {{rectangle.height}});
-    </script>
-{% endfor %}
+	    pic = new Image();  
+	    example.width  = 800;
+        example.height = 800;            
+      	pic.src = '/static/umnydom.jpg';  
 
+      	example.onclick = function(e) {
+      		x = e.x;
+      		y = e.y;
+      		x -= example.offsetLeft;
+  			y -= example.offsetTop;
+			{% for coordinate in devicesCoordinates %}
+				if (x >= {{coordinate.x}} && y >= {{coordinate.y}} && x <= {{coordinate.x}} + {{coordinate.width}} && y <= {{coordinate.y}} + {{coordinate.height}}) {
+					window.location.href = "{% url 'getTemperature' coordinate.id %}"
+					return
+				}
+			{% endfor %}
+      	}
+      	example.onmousemove = function(e) {
+      		x = e.x;
+      		y = e.y;
+      		x -= example.offsetLeft;
+  			y -= example.offsetTop;
+			{% for coordinate in devicesCoordinates %}
+				if (x >= {{coordinate.x}} && y >= {{coordinate.y}} && x <= {{coordinate.x}} + {{coordinate.width}} && y <= {{coordinate.y}} + {{coordinate.height}}) {
+		      		tooltip.show("{{coordinate.name}}");
+					return
+				}
+			{% endfor %}
+			tooltip.hide();
+      	}
+
+	{% for rectangle in rectangles %}
+	    ctx.strokeRect({{rectangle.x}}, {{rectangle.y}}, {{rectangle.width}}, {{rectangle.height}});
+	{% endfor %}
+
+	{% for rectangle in devicesCoordinates %}
+	    ctx.strokeRect({{rectangle.x}}, {{rectangle.y}}, {{rectangle.width}}, {{rectangle.height}});
+	{% endfor %}
+
+    </script>
 {% endblock content %}

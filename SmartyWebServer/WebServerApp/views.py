@@ -12,6 +12,13 @@ class Rect:
         self.width = width
         self.height = height
 
+class DeviceCoordinate(Rect):
+    def __init__(self, x, y, id, name, width = 20, height = 20):
+        Rect.__init__(self, x, y, width, height)
+        self.id = id
+        self.name = name
+
+#TODO: remove hardcode
 def send_request_to_device_manager(json_request):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect(('localhost', 1313))
@@ -33,7 +40,6 @@ def get_state_for_client(request, deviceId):
     return HttpResponse(send_get_state(deviceId))
 
 def get_map_for_client(request):
-    print "ololo"
     return HttpResponse(get_map())
 
 def index(request):
@@ -50,13 +56,19 @@ def map(request):
     rectanglesList = []
     for rect in map['rectangles']:
         rectanglesList.append(Rect(rect[0], rect[1], rect[2], rect[3]))
-    map['rectangles'] = rectanglesList
 
+    deviceCoordinatesList = []
+    for id in map['devicesCoordinates']:
+        device = map['devicesCoordinates'][id]
+        deviceCoordinatesList.append(DeviceCoordinate(device[0], device[1], name=devices[id], id=id))
+
+    map['rectangles'] = rectanglesList
+    map['devicesCoordinates'] = deviceCoordinatesList
     context.update(map)
 
     return render(request, 'WebServerApp/map.html', context)
 
-#TODO: remove hardcode
+
 def getTemperature(request, deviceId):
 
     message = json.loads(send_get_state(deviceId))

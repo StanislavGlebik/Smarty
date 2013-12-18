@@ -12,6 +12,7 @@ class DeviceManager:
 		self.logger = logging.getLogger("deviceManagerLogger")
 		self.logger.addHandler(logging.NullHandler())
 		self.__allLoadedDevices = {}
+		self.__deviceCoordinates = {}
 		self.__initDevices(configFile)
 
 	def getDeviceList(self):
@@ -21,15 +22,18 @@ class DeviceManager:
 		with open(common.getMapFilePath(), "r") as fin:
 			width, height = fin.readline().split()
 			rectangles = []
+			devices = []
 			for line in fin.readlines():
 				splitted = line.split()
-				if splitted[0] == "Rect":
+
+				if len(splitted) > 0 and splitted[0] == "Rect":
 					new_rect = (int(splitted[1]), int(splitted[2]), int(splitted[3]), int(splitted[4]))
 					rectangles.append(new_rect)
 
 		return {'width': width, 
 				'height': height,
-				'rectangles': rectangles}
+				'rectangles': rectangles,
+				'devicesCoordinates': self.__deviceCoordinates}
 
 	#TODO: remove hardcoded commands
 	def sendCommand(self, command):
@@ -85,8 +89,12 @@ class DeviceManager:
 			return
 		else:
 			try:
+				deviceId = self.__getNewDeviceId()
+				if deviceConfig.has_key("coordinates"):
+					self.__deviceCoordinates[deviceId] = deviceConfig["coordinates"]
+				#TODO: add to status
 				deviceDriverClass = getattr(__import__(deviceConfig["driver"]), deviceConfig["driver"])
-				self.__allLoadedDevices[self.__getNewDeviceId()] = deviceDriverClass(deviceConfig)
+				self.__allLoadedDevices[deviceId] = deviceDriverClass(deviceConfig)
 			except ImportError as e:
 				self.logger.error("Cannot load driver: " + e.message)
 			else:
