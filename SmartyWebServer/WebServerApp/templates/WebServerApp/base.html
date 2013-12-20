@@ -29,14 +29,14 @@
             <li class="dropdown">
               <a href="/map" class="dropdown-toggle" data-toggle="dropdown">Map<b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="/map">Floor 1</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
+                {% for floor in floors %}
+                  <li><a href="/map/{{floor}}">Floor {{floor}}</a></li>
+                {% endfor %}
               </ul>
             </li>    
-            <li><a href="#about">About</a></li>          
+            <li><a href="/about">About</a></li>          
           </ul>
-        </div><!--/.nav-collapse -->
+        </div>
       </div>
     </div>
 
@@ -48,8 +48,8 @@
             <li><a href={%url 'getTemperature' id%}>{{ deviceName }}</a></li>
           {% endfor %}
         </ul>
-      </div><!--/.well -->
-    </div><!--/span-->
+      </div>
+    </div>
 
     {% block content %} {% endblock %}
   </div>

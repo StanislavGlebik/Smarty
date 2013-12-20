@@ -38,11 +38,14 @@ def get_device_list():
 def send_get_state(deviceId):
     return send_request_to_device_manager('{"action": "get_state", "deviceId": %s}'%deviceId)
     
-def get_map():
-    return send_request_to_device_manager('{"action": "get_map"}')
+def get_map(floor):
+    return send_request_to_device_manager('{"action": "get_map", "floor": %s}'%floor)
 
 def get_smarty_state():
     return send_request_to_device_manager('{"action": "get_smarty_state"}')
+
+def get_floors_amount():
+    return send_request_to_device_manager('{"action": "get_floors_amount"}')
 
 # for clients
 def get_state_for_client(request, deviceId):
@@ -53,9 +56,14 @@ def get_map_for_client(request):
 
 def index(request):
     devices = ast.literal_eval(get_device_list())
+    floors = ast.literal_eval(get_floors_amount())[0]
+    floorList = []
+    for i in range(floors):
+        floorList.append(i)
     smarty_state = ast.literal_eval(get_smarty_state())
 
     context = {'deviceList': devices,
+               'floors': floorList,
                'startTime': smarty_state['start_time']}
 
     devicesStatus = []
@@ -66,10 +74,17 @@ def index(request):
 
     return render(request, 'WebServerApp/index.html', context)
 
-def map(request):
+def map(request, floor):
     devices = ast.literal_eval(get_device_list())
-    context = {'deviceList': devices}
-    map = ast.literal_eval(get_map())
+    floors = ast.literal_eval(get_floors_amount())[0]    
+    floorList = []
+    for i in range(floors):
+        floorList.append(i)
+
+    context = {'deviceList': devices,
+               'floors': floorList}
+    print get_map(floor)
+    map = ast.literal_eval(get_map(floor))
 
     rectanglesList = []
     for rect in map['rectangles']:
@@ -84,18 +99,36 @@ def map(request):
     map['devicesCoordinates'] = deviceCoordinatesList
     context.update(map)
 
+
     return render(request, 'WebServerApp/map.html', context)
 
 
 def getTemperature(request, deviceId):
-
     message = json.loads(send_get_state(deviceId))
+    floors = ast.literal_eval(get_floors_amount())[0]
+    floorList = []
+    for i in range(floors):
+        floorList.append(i)    
     devices = ast.literal_eval(get_device_list())
 
-    context = {'deviceList': devices}
+    context = {'deviceList': devices,
+               'floors': floorList} 
+
     if message["result"] == 1:
         context['temperature'] = message['temperature']
     else:
         context['temperature'] = message['error_msg']
 
     return render(request, 'WebServerApp/temperature.html', context)
+
+def about(request):
+    devices = ast.literal_eval(get_device_list())
+    floors = ast.literal_eval(get_floors_amount())[0]    
+    floorList = []
+    for i in range(floors):
+        floorList.append(i)
+
+    context = {'deviceList': devices,
+               'floors': floorList}
+
+    return render(request, 'WebServerApp/about.html', context)

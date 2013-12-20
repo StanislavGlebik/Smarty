@@ -17,27 +17,43 @@ class DeviceManager:
 		self.__allLoadedDevices = {}
 		self.__devicesLoadStatus = []
 		self.__deviceCoordinates = {}
+		self.__devicesFloors = {}
 		self.__initDevices(configFile)
+		self.__readMap()
 
 	def getDeviceList(self):
 		return {id: device.name for (id, device) in self.__allLoadedDevices.items()}
 
-	def getMap(self):
+	def __readMap(self):
+		self.map = {}
+
 		with open(common.getMapFilePath(), "r") as fin:
-			width, height = fin.readline().split()
-			rectangles = []
-			devices = []
-			for line in fin.readlines():
-				splitted = line.split()
+			self.floorsAmount = int(fin.readline())
+			for i in range(self.floorsAmount):
+				width, height = fin.readline().split()
+				rectangles = []
+				devices = []
+				line = fin.readline()
 
-				if len(splitted) > 0 and splitted[0] == "Rect":
-					new_rect = (int(splitted[1]), int(splitted[2]), int(splitted[3]), int(splitted[4]))
-					rectangles.append(new_rect)
+				#TODO: Hack! Remove it!
+				while line.startswith("Rect"):
+					splitted = line.split()
+					if len(splitted) > 0 and splitted[0] == "Rect":
+						new_rect = (int(splitted[1]), int(splitted[2]), int(splitted[3]), int(splitted[4]))
+						rectangles.append(new_rect)
+					line = fin.readline()
 
-		return {'width': width, 
-				'height': height,
-				'rectangles': rectangles,
-				'devicesCoordinates': self.__deviceCoordinates}
+				self.map[i] = {'width': width, 'height': height, 'rectangles': rectangles}
+
+	def getMap(self, floor):
+		def filterFunc(id):
+			device = self.__devicesFloors[id]
+			return (self.__devicesFloors.has_key(id) and (self.__devicesFloors[id] == floor))
+
+		return {'rectangles': self.map[floor]['rectangles'],
+				'width': self.map[floor]['width'],
+				'height': self.map[floor]['height'],
+				'devicesCoordinates': {id: self.__deviceCoordinates[id] for id in filter(filterFunc, self.__deviceCoordinates)}} 
 
 	def getSmartyState(self):
 		return {'start_time': strftime("%Y-%m-%d %H:%M:%S", self.startTime),
@@ -55,13 +71,13 @@ class DeviceManager:
 
 		try:
 			if command["action"] == "get_map":
-				return str(self.getMap())
+				return str(self.getMap(int(command["floor"])))
 		except Exception as e:
 			self.logger.error("Cannot get map: " + e.message)
 			return self.__getJSONError("Error while handling request: " + e.message)
 
 		if command["action"] == "get_floors_amount":
-			return ""
+			return "[%d]"%self.floorsAmount
 
 		try:
 			if command["action"] == "get_smarty_state":
@@ -110,6 +126,9 @@ class DeviceManager:
 				deviceId = self.__getNewDeviceId()
 				if deviceConfig.has_key("coordinates"):
 					self.__deviceCoordinates[deviceId] = deviceConfig["coordinates"]
+				if deviceConfig.has_key("floor"):
+					self.__devicesFloors[deviceId] = deviceConfig["floor"]
+
 				#TODO: add to status
 				deviceDriverClass = getattr(__import__(deviceConfig["driver"]), deviceConfig["driver"])
 				self.__allLoadedDevices[deviceId] = deviceDriverClass(deviceConfig)

@@ -1,4 +1,6 @@
 [{"name": "Temperature sensor", "driver": "MockTemperatureSensorDriver", "floor":1, "coordinates": [100, 100]}, 
 {"name": "Temperature sensor bedroom", "driver": "MockTemperatureSensorDriver", "temperature": 10, "floor":1, "coordinates": [150, 150]},
 {"name": "Temperature sensor kitchen", "driver": "MockTemperatureSensorDriver", "temperature": 17, "floor":1, "coordinates": [200, 200]},
-{"name": "Failed device", "driver": "OloloDriver"}]
+{"name": "Failed device", "driver": "OloloDriver"},
+{"name": "Temperature sensor upper floor", "driver": "MockTemperatureSensorDriver", "temperature": 11, "floor":2, "coordinates": [200, 200]},
+{"name": "Temperature sensor upper floor", "driver": "MockTemperatureSensorDriver", "temperature": 11, "floor":4, "coordinates": [200, 200]}]
