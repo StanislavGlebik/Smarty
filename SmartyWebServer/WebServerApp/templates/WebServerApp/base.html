@@ -6,12 +6,14 @@
 	<title>Smarty</title>
 	<link rel="stylesheet" type="text/css" href="{% static 'WebServerApp/css/bootstrap.min.css' %}"/>	
   <link rel="stylesheet" href="{% static 'WebServerApp/css/starter-template.css' %}">
-  <link rel="stylesheet" href="{% static 'WebServerApp/css/tooltip.css' %}">  	
+  <link rel="stylesheet" href="{% static 'WebServerApp/css/tooltip.css' %}"> 
+  <link rel="stylesheet" href="{% static 'WebServerApp/css/offcanvas.css' %}">    	
   <script type="text/javascript" src="{% static 'WebServerApp/js/dropdown.js' %}"></script>    
   <script type="text/javascript" src="{% static 'WebServerApp/js/jquery.js' %}"></script>    
   <script type="text/javascript" src="{% static 'WebServerApp/js/bootstrap.min.js' %}"></script>    
-  <script type="text/javascript" src="{% static 'WebServerApp/js/tooltip.js' %}"></script>    
-
+  <script type="text/javascript" src="{% static 'WebServerApp/js/tooltip.js' %}"></script>  
+  <script type="text/javascript" src="{% static 'WebServerApp/js/bootstrap-tooltip.js' %}"></script>      
+  <script type="text/javascript" src="{% static 'WebServerApp/js/offcanvas.js' %}"></script>    
 </head>
 
 <body>
@@ -27,13 +29,9 @@
             <li class="dropdown">
               <a href="/map" class="dropdown-toggle" data-toggle="dropdown">Map<b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="/map">Action</a></li>
+                <li><a href="/map">Floor 1</a></li>
                 <li><a href="#">Another action</a></li>
                 <li><a href="#">Something else here</a></li>
-                <li class="divider"></li>
-                <li class="dropdown-header">Nav header</li>
-                <li><a href="#">Separated link</a></li>
-                <li><a href="#">One more separated link</a></li>
               </ul>
             </li>    
             <li><a href="#about">About</a></li>          

@@ -2,7 +2,46 @@
 
 {% block content %}
   <div class="starter-template">
-    <h1>Can I help you?</h1>
+    <h1>Status</h1>
   </div>
+  	<div class="container">
+      <div class="row row-offcanvas row-offcanvas-left">
+        <div class="col-xs-12 col-sm-9">
+          	<p class="pull-left visible-xs">
+            	<button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
+          	</p>
+          	<div class="jumbotron">
+          		<h2>Start time: {{startTime}}<h3>
+          		<p></p>
+          		<table class="table">
+				  <tr>
+				    <td><div align="center"><font size=4px color=#606060></font>Device</div></td>
+				    <td><div align="center"><font size=4px color=#606060>Status</font></div></td>
+				  </tr>
+				  
+				  {%for device in devicesStatus%}
+					  <tr>
+					    <td><font size=4px color=#606060></font>{{device.deviceName}}</td>
+					    
+					    <td>
+					    	<div align="center">
+					    		{% if device.status = "Success" %}
+					    			<div class="alert alert-success">
+					    			<div title="Hell yeah" href="#" data-toggle="tooltip" data-placement="top">{{device.status}}</div>
+					    		{% else %}
+					    			<div class="alert alert-danger">		
+					    				<div title="{{device.reason}}" href="#" data-toggle="tooltip" data-placement="top">{{device.status}}</div>			    		
+					    		{% endif %}	
 
+					    		</div>
+					    	</div>
+					    </td>
+					  </tr>				  	
+				  {% endfor %}
+          		</table>
+          	</div>
+        </div>
+      </div>
+    </div>
+ 
 {% endblock content %}

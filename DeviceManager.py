@@ -2,8 +2,10 @@ import logging
 import json
 import os
 import sys
+from time import gmtime, strftime
 
 import common
+
 
 #Logger name: deviceManagerLogger
 class DeviceManager:
@@ -11,7 +13,9 @@ class DeviceManager:
 		sys.path.append(driverModulesFolder)
 		self.logger = logging.getLogger("deviceManagerLogger")
 		self.logger.addHandler(logging.NullHandler())
+		self.startTime = gmtime()
 		self.__allLoadedDevices = {}
+		self.__devicesLoadStatus = []
 		self.__deviceCoordinates = {}
 		self.__initDevices(configFile)
 
@@ -35,6 +39,10 @@ class DeviceManager:
 				'rectangles': rectangles,
 				'devicesCoordinates': self.__deviceCoordinates}
 
+	def getSmartyState(self):
+		return {'start_time': strftime("%Y-%m-%d %H:%M:%S", self.startTime),
+				'devices_load_status': self.__devicesLoadStatus}
+
 	#TODO: remove hardcoded commands
 	def sendCommand(self, command):
 		driverCommonModule = __import__(common.DRIVER_COMMON_MODULE_NAME)
@@ -51,6 +59,16 @@ class DeviceManager:
 		except Exception as e:
 			self.logger.error("Cannot get map: " + e.message)
 			return self.__getJSONError("Error while handling request: " + e.message)
+
+		if command["action"] == "get_floors_amount":
+			return ""
+
+		try:
+			if command["action"] == "get_smarty_state":
+				return str(self.getSmartyState())
+		except Exception as e:
+			self.logger.error("Cannot get Smarty state" + e.message)
+			return self.__getJSONError("Error while handling request: " +  e.message)
 
 		try:
 			device = self.__allLoadedDevices[command["deviceId"]]
@@ -96,9 +114,14 @@ class DeviceManager:
 				deviceDriverClass = getattr(__import__(deviceConfig["driver"]), deviceConfig["driver"])
 				self.__allLoadedDevices[deviceId] = deviceDriverClass(deviceConfig)
 			except ImportError as e:
-				self.logger.error("Cannot load driver: " + e.message)
+				self.__devicesLoadStatus.append((deviceConfig["name"], "Failed", "No driver found"))
+				self.logger.error("Cannot load driver, no driver found: " + e.message)
+			except Exception as e:
+				self.__devicesLoadStatus.append((deviceConfig["name"], "Failed", "Initialization troubles: " + e.message))
+				self.logger.error("Cannot load driver, initialization troubles: " + e.message)			
 			else:
-				self.logger.info("Driver was loaded")
+				self.__devicesLoadStatus.append((deviceConfig["name"], "Success", ""))				
+				self.logger.info("Driver was loaded " + deviceConfig["name"])
 
 	def __getNewDeviceId(self):
 		return len(self.__allLoadedDevices)

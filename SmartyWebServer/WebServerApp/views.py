@@ -18,6 +18,12 @@ class DeviceCoordinate(Rect):
         self.id = id
         self.name = name
 
+class DeviceState:
+    def __init__(self, deviceName, status, reason=""):
+        self.deviceName = deviceName
+        self.status = status
+        self.reason = reason
+
 #TODO: remove hardcode
 def send_request_to_device_manager(json_request):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -35,6 +41,9 @@ def send_get_state(deviceId):
 def get_map():
     return send_request_to_device_manager('{"action": "get_map"}')
 
+def get_smarty_state():
+    return send_request_to_device_manager('{"action": "get_smarty_state"}')
+
 # for clients
 def get_state_for_client(request, deviceId):
     return HttpResponse(send_get_state(deviceId))
@@ -44,7 +53,16 @@ def get_map_for_client(request):
 
 def index(request):
     devices = ast.literal_eval(get_device_list())
-    context = {'deviceList': devices}
+    smarty_state = ast.literal_eval(get_smarty_state())
+
+    context = {'deviceList': devices,
+               'startTime': smarty_state['start_time']}
+
+    devicesStatus = []
+    for device in smarty_state['devices_load_status']:
+        devicesStatus.append(DeviceState(device[0], device[1], device[2]))
+
+    context['devicesStatus'] = devicesStatus
 
     return render(request, 'WebServerApp/index.html', context)
 
