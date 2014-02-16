@@ -22,7 +22,7 @@
   			y -= example.offsetTop;
 			{% for coordinate in devicesCoordinates %}
 				if (x >= {{coordinate.x}} && y >= {{coordinate.y}} && x <= {{coordinate.x}} + {{coordinate.width}} && y <= {{coordinate.y}} + {{coordinate.height}}) {
-					window.location.href = "{% url 'getTemperature' coordinate.id %}"
+					window.location.href = "{% url 'getDeviceState' coordinate.id %}"
 					return
 				}
 			{% endfor %}

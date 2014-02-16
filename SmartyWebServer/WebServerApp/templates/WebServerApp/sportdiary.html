@@ -1,0 +1,28 @@
+{% extends "WebServerApp/base.html" %}
+
+{% block content %}
+	<div class="starter-template">
+		<h1>Your sport diary, my Lord.</h1>
+	</div>
+
+  	<div class="container">
+      <div class="row row-offcanvas row-offcanvas-left">
+      	<div class="col-xs-12 col-sm-9">
+
+			<table class="table table-hover">
+				<tr>
+					<th>Date</th>
+					<th>Details</th>
+				</tr>
+				{% for event in events %}
+					<tr>
+						<td>{{event.date}}</td>
+						<td>{{event.activity}}</td>
+					</tr>
+				{% endfor %}
+			</table>
+		</div>
+	  </div>
+	</div>	
+
+{% endblock content %}
