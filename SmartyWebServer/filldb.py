@@ -2,16 +2,6 @@
 
 from WebServerApp.models import *
 
-from django.contrib.auth.models import User
+rec = WeatherRecord(date='2014-03-25', humidity=0.3, temperature=24.0)
+rec.save()
 
-pullupps_exercise = ExerciseType(activity='Pullups')
-pullupps_exercise.save()
-
-bench_exercise = ExerciseType(activity='Bench press')
-bench_exercise.save()
-
-sportExercise = SportExercise(training_date="2012-02-02", exercise=pullupps_exercise)
-sportExercise.save()
-
-sportExercise = SportExercise(training_date="2012-03-02", exercise=bench_exercise)
-sportExercise.save()
