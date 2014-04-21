@@ -4,7 +4,7 @@
 
 {% block content %}
 	<div class="starter-template">
-		<h1>Temperature: {{temperature}} C</h1>
+		<h1>Temperature: {{current_temperature}} C</h1>
 	</div>
 
   	<div class="container">
@@ -22,16 +22,18 @@
 
 	    var container = document.getElementById('container');
 	    var data = [];
-	    var datacos = [];
-	    for (var i = 0; i < 8 * Math.PI; i += 2) {
-	      data.push([i, Math.sin(i)]);
-	      datacos.push([i, Math.cos(i)]);
-	    }
+	    
+            var i = 0;
+	    {% for tempItem in tempList%}
+		++i;
+		data.push([ i, {{tempItem.temperature}} ]);
+	    {% endfor %}
 
-	    Flotr.draw(container, [ data, datacos ], {yaxis : {
-	          max : 2,
-	          min : -2
-	        }});
+	    Flotr.draw(container, [data], {yaxis : {
+	          max : 30,
+	          min : 10 
+	        }
+		});
 	  })();
 	</script>
 {% endblock content %}

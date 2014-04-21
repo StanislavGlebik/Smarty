@@ -6,12 +6,12 @@ class CommonNames:
 	FLOORS_LIST = 'floors'
 	SMARTY_START_TIME = 'startTime'
 	DEVICES_STATUS_LIST = 'devicesStatus'
-	VIEWER_KEY = "viewer"
+	VIEWER_KEY = 'viewer'
 
 #TODO: remove hardcode
 def send_request_to_device_manager(json_request):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect(('localhost', 1313))
+    s.connect(('localhost', 13133))
     s.sendall(json_request)
     response = s.recv(4096)
     return response

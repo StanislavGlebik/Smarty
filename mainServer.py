@@ -32,10 +32,11 @@ def main():
 
 	deviceManager = DeviceManager(common.getDevicesConfigFilePath(), common.DRIVERS_FOLDER)
 
+	serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	serversocket.bind(('localhost', common.PORT))
+	serversocket.listen(5)
+
 	try:
-		serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		serversocket.bind(('localhost', common.PORT))
-		serversocket.listen(5)
 		loop(serversocket, deviceManager)
 	except Exception as e:
 		logger.error(e.message)
